@@ -333,6 +333,58 @@ export class DayPlannerSettingsTab extends PluginSettingTab {
           }),
       );
 
+    containerEl.createEl("h2", { text: "Ignore headers" });
+    containerEl.createEl("p", {
+      text: `Defined headers will not be displayed on the timeline.`,
+    });
+
+    this.plugin.settings().ignoreHeaders.map((header, index) =>
+      new Setting(containerEl)
+        .setName(`Header ${index + 1}`)
+        .addText((el) =>
+          el
+            .setPlaceholder("Text")
+            .setValue(header)
+            .onChange((value: string) => {
+              this.settingsStore.update((previous) => ({
+                ...previous,
+                ignoreHeaders: previous.ignoreHeaders.map(
+                  (editedHeader, edittedIndex) =>
+                    edittedIndex === index ? value : editedHeader,
+                ),
+              }));
+            }),
+        )
+        .addExtraButton((el) =>
+          el
+            .setIcon("trash")
+            .setTooltip("Delete the header")
+            .onClick(() => {
+              this.settingsStore.update((previous) => ({
+                ...previous,
+                ignoreHeaders: previous.ignoreHeaders.filter(
+                  (_, editedIndex) => editedIndex !== index,
+                ),
+              }));
+
+              this.display();
+            }),
+        ),
+    );
+
+    new Setting(containerEl).addButton((el) =>
+      el.setButtonText("Add the header for ignore").onClick(() => {
+        const newOverride = "Ignore";
+
+        this.settingsStore.update((previous) => ({
+          ...previous,
+          ignoreHeaders: [...previous.ignoreHeaders, newOverride],
+        }));
+
+        this.display();
+      }),
+    );
+
     containerEl.createEl("h2", { text: "Status bar widget" });
 
     new Setting(containerEl).setName("Show active task").addToggle((toggle) =>

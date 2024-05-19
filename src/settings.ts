@@ -46,6 +46,7 @@ export interface DayPlannerSettings {
   copyOnDrag: boolean;
   colorOverrides: Array<ColorOverride>;
   releaseNotes: boolean;
+  ignoreHeaders: Array<string>;
 }
 
 export const defaultSettings: DayPlannerSettings = {
@@ -81,6 +82,7 @@ export const defaultSettings: DayPlannerSettings = {
   editMode: "simple",
   copyOnDrag: false,
   releaseNotes: true,
+  ignoreHeaders: [],
 };
 
 export const defaultSettingsForTests = {

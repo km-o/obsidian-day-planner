@@ -47,7 +47,16 @@ export function mapToTasksForDay(
   tasksForDay: STask[],
   settings: DayPlannerSettings,
 ) {
-  const [withTime, withoutTime] = partition(isTimeSetOnTask, tasksForDay);
+  const ignoreHeaders = settings.ignoreHeaders;
+  const filteredTasksForDay = tasksForDay.filter((sTask) => {
+    const subpath = sTask.section.subpath;
+    return !(subpath && ignoreHeaders.contains(subpath));
+  });
+
+  const [withTime, withoutTime] = partition(
+    isTimeSetOnTask,
+    filteredTasksForDay,
+  );
 
   const { parsed: tasksWithTime, errors } = withTime.reduce(
     (result, sTask) => {
